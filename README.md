@@ -1,120 +1,123 @@
 <img width="1919" height="822" alt="Screenshot_3" src="https://github.com/user-attachments/assets/39c15af2-474a-48fe-a044-948bf3d7f4bf" />
 
+> ⚠️ **Warning:** Please read the README.md file carefully before using this project. Important information about the license, installation, and SMTP settings is provided here. **Using the project without reading the README is not recommended.**
+
+
 # EmailContactService
 
-**EmailContactService**, ASP.NET Core MVC ile hazırlanmış bir iletişim formu uygulamasıdır. Kullanıcılar form üzerinden ad, e-posta, konu ve mesaj bilgilerini girerek belirlenen e-posta adresine mesaj gönderebilir.  
+**EmailContactService** is a contact form application built with ASP.NET Core MVC. Users can fill out their name, email, subject, and message, and send it to a specified email address.  
+---
+
+## Features
+
+- Simple and modern contact form (designed with Bootstrap 4)  
+- Email sending via SMTP (Gmail / Outlook support)  
+- Error messages and success messages  
+- Responsive design   
 
 ---
 
-## Özellikler
+## Requirements
 
-- Basit ve modern iletişim formu (Bootstrap 4 ile tasarlanmış)  
-- SMTP üzerinden e-posta gönderimi (Gmail / Outlook desteği)  
-- Hata mesajları ve başarılı gönderim mesajları  
-- Responsive tasarım  
-
----
-
-## Gereksinimler
-
-- [.NET 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0) veya üzeri  
-- Visual Studio 2022 veya VS Code  
-- Gmail veya Outlook hesabı (SMTP kullanımı için)  
-- İnternet bağlantısı  
+- [.NET 6.0 SDK](https://dotnet.microsoft.com/download/dotnet/6.0) or later  
+- Visual Studio 2022 or VS Code  
+- Gmail or Outlook account (for SMTP usage)  
+- Internet connection  
 
 
 
 
-**Gmail ve Outlook Kullanımı için Önemli Not!!**
+**Important Note for Gmail and Outlook Users!**
 ```bash 
-E-posta gönderimi için SMTP üzerinden uygulama şifresi (App Password) kullanmanız gerekir.
+To send emails, you must use an App Password via SMTP.
 
-Neden gerekli?
+Why?
 
-Gmail ve Outlook artık doğrudan hesap şifresiyle SMTP erişimine izin vermez.
+Gmail and Outlook no longer allow direct SMTP access using your account password.
 
-2 aşamalı doğrulama (2FA) açık değilse App Password oluşturamazsınız.
+If 2-Step Verification (2FA) is not enabled, you cannot create an App Password.
 
-Bu nedenle hem Gmail hem de Outlook kullanıcıları 2FA’yı aktif hale getirmeli ve ardından App Password oluşturmalıdır.
+Therefore, both Gmail and Outlook users must enable 2FA and then create an App Password.
 
-Adımlar
+Steps:
 ```
 **Gmail:**
 ```bash 
-Google hesabınıza giriş yapın.
+Log in to your Google account.
 
-Güvenlik → 2 Adımlı Doğrulama kısmını etkinleştirin.
+Go to Security → 2-Step Verification and enable it.
 
-Uygulama şifreleri menüsünden yeni bir şifre oluşturun.
+From App Passwords, generate a new password.
 
-Oluşturduğunuz şifreyi HomeController.cs içindeki SMTP Credentials kısmında kullanın.
+Use the generated password in the SMTP Credentials section in HomeController.cs
 ```
+
 **Outlook:**
 ```bash 
-Microsoft hesabınıza giriş yapın.
+Log in to your Microsoft account.
 
-Güvenlik → İleri düzey güvenlik → App Passwords kısmını bulun.
+Go to Security → Advanced Security → App Passwords.
 
-Yeni bir uygulama şifresi oluşturun ve SMTP Credentials kısmında kullanın.
-
-⚠️ Önemli: App Password’ü kodda direkt yazmak güvenli değildir. Environment variable veya appsettings.json kullanmanız önerilir.
+Generate a new App Password and use it in the SMTP Credentials section.
 ```
+⚠️ Important: Do not hardcode the App Password in your code. It is recommended to use environment variables or appsettings.json.
+
 
 ---
 
-## Kurulum
+## Installation
 
-1. **Projeyi klonlayın:**  
+1. **Clone the project:**  
 ```bash 
 Install-Package TronNet
 ```
 
 
-2. **NuGet paketlerini yükleyin:**
+2. **Restore NuGet packages:**
 ```bash 
 dotnet restore
 ```
 
 
-3. **SMTP ayarlarını yapılandırın:** 
+3. **Configure SMTP settings:** 
 HomeController.cs içindeki kod şu şekilde çalışır:
 ```bash 
 var mail = new MailMessage();
-mail.To.Add("abcd@gmail.com"); // Mesajın gideceği e-posta
-mail.From = new MailAddress(model.Email); // Kullanıcının e-posta adresi
+mail.To.Add("abcd@gmail.com"); // Recipient email
+mail.From = new MailAddress(model.Email); // User's email
 mail.Subject = model.Subject;
 mail.Body = $"Gönderen: {model.Name} <{model.Email}>\nMesaj: {model.Message}";
 
-using (var smtp = new SmtpClient("smtp.gmail.com", 587)) // Gmail SMTP sunucusu
+using (var smtp = new SmtpClient("smtp.gmail.com", 587)) // Gmail SMTP server
 {
     smtp.Credentials = new NetworkCredential("abcd@gmail.com", "AppPasswordKey"); 
-    // Gönderici e-posta adresi, **uygulama şifresi (App Password)** kullanılıyor.
-    // App Password oluşturmak için mail adresinizin 2 aşamalı doğrulamasını (2FA) açmanız gerekiyor. Gmail ve Outlook için geçerli.
+    // Sender email and App Password
+    // To create an App Password, 2-Step Verification (2FA) must be enabled. Valid for Gmail and Outlook..
     smtp.EnableSsl = true;
     smtp.Send(mail);
 }
 ```
 
 
-4.**Gmail yerine Outlook kullanmak için**
+4.**Using Outlook instead of Gmail:**
 ```bash
-using (var smtp = new SmtpClient("smtp.office365.com", 587)) // // Gmail SMTP sunucusu ve portu eğer isterseniz OUTLOOK için "smtp.office365.com" ve port 587 kullanılabilir.
+using (var smtp = new SmtpClient("smtp.office365.com", 587)) // Use this for Outlook SMTP
 ```
 
 
-**Açıklamalar:**
+**Explanations:**
 ```bash
-mail.To.Add("abcd@gmail.com") → Mesajın gönderileceği e-posta adresi.
+mail.To.Add("abcd@gmail.com") → Recipient email address
 
-mail.From = new MailAddress(model.Email) → Formu dolduran kullanıcının e-posta adresi.
+mail.From = new MailAddress(model.Email) → Email of the user filling out the form
 
-smtp.Credentials → Gönderici e-posta adresi ve uygulama şifresi (App Password).
+smtp.Credentials → Sender email and App Password
 
-⚠️ Önemli: Bu şifreyi kodda asla public olarak bırakma! GitHub’da paylaşmak için environment variable veya appsettings.json kullan.
+⚠️ Important: Never leave the password public in the code. Use environment variables or appsettings.json for GitHub.
 
-smtp.EnableSsl = true → Güvenli gönderim sağlar.
+smtp.EnableSsl = true → Ensures secure sending
 
-Gmail yerine Outlook kullanmak için:
+Use smtp.office365.com instead of Gmail for Outlook
 ```
 **LİCENCE**
 ```bash
