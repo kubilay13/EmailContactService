@@ -69,7 +69,7 @@ Generate a new App Password and use it in the SMTP Credentials section.
 
 1. **Clone the project:**  
 ```bash 
-Install-Package TronNet
+Install-Package EmailContactService
 ```
 
 
