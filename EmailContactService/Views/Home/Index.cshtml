@@ -1,0 +1,34 @@
+﻿@model EmailContactService.Models.ContactEmailModels.ContactEmailModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css" integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+<link href="~/css/site.css" rel="stylesheet" />
+
+<div class="container">
+    <div class="contact-form">
+        <h2>İletişim Formu</h2>
+        @using (Html.BeginForm())
+        {
+            <div class="form-group">
+                @Html.LabelFor(m => m.Name)
+                @Html.TextBoxFor(m => m.Name, new { @class = "form-control", placeholder = "Ad Soyad" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Email)
+                @Html.TextBoxFor(m => m.Email, new { @class = "form-control", placeholder = "Email" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Subject)
+                @Html.TextBoxFor(m => m.Subject, new { @class = "form-control", placeholder = "Konu" })
+            </div>
+            <div class="form-group">
+                @Html.LabelFor(m => m.Message)
+                @Html.TextAreaFor(m => m.Message, new { @class = "form-control", placeholder = "Mesaj", rows = "5" })
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">Gönder</button>
+
+            <a href="https://github.com/kubilay13" class="d-block text-center mt-3">GİTHUB LİNK</a>
+        }
+    </div>
+</div>
